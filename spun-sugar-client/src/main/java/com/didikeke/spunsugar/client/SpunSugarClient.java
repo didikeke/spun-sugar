@@ -19,6 +19,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
+import com.didikeke.spunsugar.client.domain.Reader;
+
 public class SpunSugarClient {
     
     private final static int connectionTimeoutMillis = 10 * 1000;
@@ -54,7 +56,7 @@ public class SpunSugarClient {
         this.httpclient = new DefaultHttpClient(httpParams);
     }
     
-    public void login() throws IOException{
+    public Reader login() throws IOException{
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
         formparams.add(new BasicNameValuePair("name", username));
         formparams.add(new BasicNameValuePair("code", password));
@@ -62,8 +64,8 @@ public class SpunSugarClient {
         HttpPost httppost = new HttpPost("http://ztiii.zjlib.cn/patroninfo*chx");
         //httppost.setHeader("Set-Cookie", cookies);
         httppost.setEntity(entity);
-        String result = httpclient.execute(httppost,responseHandler); 
-        System.out.println(result);
+        String html = httpclient.execute(httppost,responseHandler); 
+        return ObjUtils.newReader(html);
     }
     
 }
