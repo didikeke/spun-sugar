@@ -1,15 +1,15 @@
 package com.didikeke.spunsugar.client.domain;
 
-public class Reader {
+public class User {
     
     private String id;
     private String name;
-    private String validDate;
+    private String expirationDate;
     
-    public Reader(String id, String name, String validDate) {
+    public User(String id, String name, String validDate) {
         this.id = id;
         this.name = name;
-        this.validDate = validDate;
+        this.expirationDate = validDate;
     }
     
     public String getId() {
@@ -24,12 +24,12 @@ public class Reader {
     public void setName(String name) {
         this.name = name;
     }
-    public String getValidDate() {
-        return validDate;
+    public String getExpirationDate() {
+        return expirationDate;
     }
 
-    public void setValidDate(String validDate) {
-        this.validDate = validDate;
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
 }

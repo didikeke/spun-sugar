@@ -5,21 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.ProtocolException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import com.didikeke.spunsugar.client.domain.Reader;
+import com.didikeke.spunsugar.client.domain.User;
 
 public class SpunSugarClient {
     
@@ -34,12 +39,32 @@ public class SpunSugarClient {
     private ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
         public String handleResponse(HttpResponse response)
                 throws ClientProtocolException, IOException {
+            
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 return EntityUtils.toString(entity, "UTF-8");
             } else {
                 return "";
+            }           
+            
+        }
+    };
+    
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy() {                
+        public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context)  {
+            boolean isRedirect=false;
+            try {
+                isRedirect = super.isRedirected(request, response, context);
+            } catch (ProtocolException e) {
+                e.printStackTrace();
             }
+            if (!isRedirect) {
+                int responseCode = response.getStatusLine().getStatusCode();
+                if (responseCode == 301 || responseCode == 302) {
+                    return true;
+                }
+            }
+            return false;
         }
     };
     
@@ -53,10 +78,12 @@ public class SpunSugarClient {
         HttpParams httpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(httpParams, connectionTimeoutMillis);
         HttpConnectionParams.setSoTimeout(httpParams, socketTimeoutMillis);
-        this.httpclient = new DefaultHttpClient(httpParams);
+        DefaultHttpClient client = new DefaultHttpClient(httpParams);
+        client.setRedirectStrategy(redirectStrategy);
+        this.httpclient = client;
     }
     
-    public Reader login() throws IOException{
+    public User login() throws IOException,SpunSugarLoginException{
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
         formparams.add(new BasicNameValuePair("name", username));
         formparams.add(new BasicNameValuePair("code", password));
@@ -65,7 +92,11 @@ public class SpunSugarClient {
         //httppost.setHeader("Set-Cookie", cookies);
         httppost.setEntity(entity);
         String html = httpclient.execute(httppost,responseHandler); 
-        return ObjUtils.newReader(html);
+        User user = ObjUtils.newUser(html);
+        if(null == user){
+            throw new SpunSugarLoginException("登录失败");
+        }
+        return user;
     }
     
 }
