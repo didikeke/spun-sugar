@@ -14,6 +14,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
@@ -24,6 +25,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import com.didikeke.spunsugar.client.domain.Item;
 import com.didikeke.spunsugar.client.domain.User;
 
 public class SpunSugarClient {
@@ -97,6 +99,15 @@ public class SpunSugarClient {
             throw new SpunSugarLoginException("登录失败");
         }
         return user;
+    }
+    
+    public List<Item> getItems(User user) throws IOException{
+        
+        HttpGet httpget = new HttpGet("http://ztiii.zjlib.cn/patroninfo~S0*chx/" 
+                + user.getId() + "/items");
+        String html = httpclient.execute(httpget,responseHandler);
+        List<Item> result = ObjUtils.newItemList(html);
+        return result;            
     }
     
 }
