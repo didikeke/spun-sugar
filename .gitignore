@@ -1,3 +1,10 @@
 /.*
 !.gitignore
 *~
+
+/spun-sugar-client/.project
+/spun-sugar-client/.classpath
+/spun-sugar-client/.settings
+/spun-sugar-client/target
+/spun-sugar-client/.settings
+/spun-sugar-client/.settings/org.eclipse.jdt.core.prefs
