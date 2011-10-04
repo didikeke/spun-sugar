@@ -2,18 +2,26 @@ package com.didikeke.spunsugar.client;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.didikeke.spunsugar.client.domain.Item;
 import com.didikeke.spunsugar.client.domain.User;
 
 public class ObjUtils {
 
-    public static User newUser(String html){
-        String name = StringUtils.substringBetween(html,"<div class=\"patNameAddress\">\r\n<strong>", "</strong>");
-        String id = StringUtils.substringBetween(html, "http://ztiii.zjlib.cn/patroninfo~S0*chx/", "/holds");
-        String expirationDate = StringUtils.substringBetween(html,"有效日期:","<br>");
+	private static String pickText(String input,String reg,int pos){
+		Pattern pattern = Pattern.compile(reg,Pattern.DOTALL);
+    	Matcher matcher = pattern.matcher(input);    
+    	if(matcher.find()){
+    		return matcher.group(pos).trim();
+    	}
+    	return null;
+	}
+    public static User newUser(String html){  
+    	String name = pickText(html,"<div class=\"patNameAddress\">.*?<strong>(.+?)</strong>",1);
+    	String id = pickText(html,"/patroninfo~S0\\*chx/(.+?)/top/",1);
+    	String expirationDate = pickText(html,"有效日期:(.+?)<br",1);
         if(null == name || null == id || null == expirationDate){
             return null;
         }
@@ -21,27 +29,40 @@ public class ObjUtils {
         return result;
     }
 
+    
     public static List<Item> newItemList(String html) {
-        String itemsHtml = StringUtils.substringBetween(html, "<table border=\"0\" class=\"patFunc\"> ","</table>");
-        String[] itemEntries = itemsHtml.split("<tr class=\"patFuncEntry\">");
-        List<Item> result = new ArrayList<Item>();
-        //int i =1 ,是因为第1个部分不是图书信息，所以略过
-        for(int i=1; i< itemEntries.length; i++){
-            Item item = newItem(itemEntries[i]);
-            result.add(item);
-        }
-        return result;
+    	List<Item> result = new ArrayList<Item>();
+    	String[] itemEntries = html.split("<tr class=\"patFuncEntry\">");
+		// int i =1 ,是因为第1个部分不是图书信息，所以略过
+		for (int i = 1; i < itemEntries.length; i++) {
+			Item item = newItem(itemEntries[i]);
+			result.add(item);
+		}
+    	return result;
     }
+
     
     public static Item newItem(String html){
         
-        String renewId = StringUtils.substringBetween(html,"value=\"","\" />");
-        String id = StringUtils.substringBetween(html, "/item&", "\">");
-        String title = StringUtils.trim(StringUtils.substringBetween(html, "/item&"+id+"\">","</a>"));
-        String barcode = StringUtils.trim(StringUtils.substringBetween(html, "<td align=\"left\" class=\"patFuncBarcode\">", "</td>"));
-        String renewCount = StringUtils.substringBetween(html,"<span  class=\"patFuncRenewCount\">","</span>");
-        String status=StringUtils.trim(StringUtils.substringBetween(html,"<td align=\"left\" class=\"patFuncStatus\">","<span"));
-        String callNo = StringUtils.trim(StringUtils.substringBetween(html,"<td align=\"left\" class=\"patFuncCallNo\">","</td>"));
+        String renewId = pickText(html,"value=\"(.+?)\" />",1);
+        String id = pickText(html,"/item&(.+?)\">",1);
+        String title = pickText(html,"/item&"+id+"\">(.+?)</a>",1);
+        String barcode = pickText(html,"<td align=\"left\" class=\"patFuncBarcode\">(.+?)</td>",1);
+        String renewCount = pickText(html,"<span  class=\"patFuncRenewCount\">(.+?)</span>",1);
+        String status = pickText(html,"class=\"patFuncStatus\">(.+?)<",1);
+        String callNo = pickText(html,"<td align=\"left\" class=\"patFuncCallNo\">(.+?)</td>",1);
+        
+        String author = pickText(html,"class=\"patFuncAuthor\">(.+?)<",1);
+        String date = pickText(html,"class=\"patFuncDate\">(.+?)<",1);
+        String details = pickText(html,"class=\"patFuncDetails\">(.+?)<",1);
+        
+        if(null == id){
+        	//for readingHistory
+        	id = pickText(html,"/record=b(.+?)~S0\\*chx",1);
+        }
+        if(null == title){
+        	title = pickText(html,"~S0\\*chx\">(.+?)<",1);
+        }
         
         Item item = new Item();
         item.setRenewId(renewId);
@@ -51,7 +72,10 @@ public class ObjUtils {
         item.setRenewCount(renewCount);
         item.setStatus(status);
         item.setCallNo(callNo);
+        
+        item.setAuthor(author);
+        item.setDate(date);
+        item.setDetails(details);
         return item;
     }
-    
 }

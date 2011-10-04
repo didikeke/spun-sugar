@@ -2,13 +2,17 @@ package com.didikeke.spunsugar.client.domain;
 
 public class Item {
     
-    private String id;
-    private String renewId;
-    private String title;
-    private String barcode;
-    private String renewCount;
-    private String status;
-    private String callNo;
+    private String id;          //item, hold, history
+    private String renewId;     //item
+    private String title;       //item, hold, history
+    private String barcode;     //item
+    private String renewCount;  //item
+    private String status;      //item, hold
+    private String callNo;      //item
+    
+    private String author;      //history
+    private String date;        //history
+    private String details;     //history
     
     public String getId() {
         return id;
@@ -52,7 +56,23 @@ public class Item {
     public void setCallNo(String callNo) {
         this.callNo = callNo;
     }
-    
-    
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getDetails() {
+		return details;
+	}
+	public void setDetails(String details) {
+		this.details = details;
+	}
     
 }

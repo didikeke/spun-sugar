@@ -20,7 +20,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -30,8 +29,8 @@ import com.didikeke.spunsugar.client.domain.User;
 
 public class SpunSugarClient {
     
-    private final static int connectionTimeoutMillis = 10 * 1000;
-    private final static int socketTimeoutMillis = 30 * 1000;
+    //private final static int connectionTimeoutMillis = 10 * 1000;
+    //private final static int socketTimeoutMillis = 30 * 1000;
     
     private HttpClient httpclient;
     
@@ -78,8 +77,8 @@ public class SpunSugarClient {
    
     private void initHttpclient(){
         HttpParams httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParams, connectionTimeoutMillis);
-        HttpConnectionParams.setSoTimeout(httpParams, socketTimeoutMillis);
+        //HttpConnectionParams.setConnectionTimeout(httpParams, connectionTimeoutMillis);
+        //HttpConnectionParams.setSoTimeout(httpParams, socketTimeoutMillis);
         DefaultHttpClient client = new DefaultHttpClient(httpParams);
         client.setRedirectStrategy(redirectStrategy);
         this.httpclient = client;
@@ -102,12 +101,22 @@ public class SpunSugarClient {
     }
     
     public List<Item> getItems(User user) throws IOException{
-        
-        HttpGet httpget = new HttpGet("http://ztiii.zjlib.cn/patroninfo~S0*chx/" 
-                + user.getId() + "/items");
-        String html = httpclient.execute(httpget,responseHandler);
-        List<Item> result = ObjUtils.newItemList(html);
-        return result;            
+    	 return getPathItems(user, "/items");          
     }
     
+    public List<Item> getHolds(User user) throws IOException {
+        return getPathItems(user, "/holds");
+    }
+    
+    public List<Item> getReadingHistory(User user) throws IOException {
+    	return getPathItems(user, "/readinghistory"); 
+    }
+    
+    protected List<Item> getPathItems(User user, String path) throws IOException{
+    	HttpGet httpget = new HttpGet("http://ztiii.zjlib.cn/patroninfo~S0*chx/" 
+                + user.getId() + path);
+    	String html = httpclient.execute(httpget,responseHandler);
+        List<Item> result = ObjUtils.newItemList(html);
+        return result;  
+    }
 }
