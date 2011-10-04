@@ -5,23 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.ProtocolException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.impl.client.DefaultRedirectHandler;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import com.didikeke.spunsugar.client.domain.Item;
@@ -37,6 +33,8 @@ public class SpunSugarClient {
     private String username;
     private String password;
     
+    private User user;
+    
     private ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
         public String handleResponse(HttpResponse response)
                 throws ClientProtocolException, IOException {
@@ -51,6 +49,7 @@ public class SpunSugarClient {
         }
     };
     
+    /*
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy() {                
         public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context)  {
             boolean isRedirect=false;
@@ -67,7 +66,7 @@ public class SpunSugarClient {
             }
             return false;
         }
-    };
+    };*/
     
     public SpunSugarClient(String username, String password){
         this.username = username;
@@ -80,11 +79,12 @@ public class SpunSugarClient {
         //HttpConnectionParams.setConnectionTimeout(httpParams, connectionTimeoutMillis);
         //HttpConnectionParams.setSoTimeout(httpParams, socketTimeoutMillis);
         DefaultHttpClient client = new DefaultHttpClient(httpParams);
-        client.setRedirectStrategy(redirectStrategy);
+        //client.setRedirectStrategy(redirectStrategy);  
+        client.setRedirectHandler(new DefaultRedirectHandler());
         this.httpclient = client;
     }
     
-    public User login() throws IOException,SpunSugarLoginException{
+    protected User login() throws IOException{
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
         formparams.add(new BasicNameValuePair("name", username));
         formparams.add(new BasicNameValuePair("code", password));
@@ -97,24 +97,33 @@ public class SpunSugarClient {
         if(null == user){
             throw new SpunSugarLoginException("登录失败");
         }
+        
         return user;
     }
     
-    public List<Item> getItems(User user) throws IOException{
-    	 return getPathItems(user, "/items");          
+    public User getUser() throws IOException{
+    	if(null == user){
+    		user = login();
+    	}
+    	return user;
     }
     
-    public List<Item> getHolds(User user) throws IOException {
-        return getPathItems(user, "/holds");
+    public List<Item> getItems() throws IOException{
+    	 return getPathItems("/items");          
     }
     
-    public List<Item> getReadingHistory(User user) throws IOException {
-    	return getPathItems(user, "/readinghistory"); 
+    public List<Item> getHolds() throws IOException {
+        return getPathItems("/holds");
     }
     
-    protected List<Item> getPathItems(User user, String path) throws IOException{
+    public List<Item> getReadingHistory() throws IOException {
+    	return getPathItems("/readinghistory"); 
+    }
+    
+    protected List<Item> getPathItems(String path) throws IOException{    	
+    	String id = getUser().getId();    	    	
     	HttpGet httpget = new HttpGet("http://ztiii.zjlib.cn/patroninfo~S0*chx/" 
-                + user.getId() + path);
+                + id + path);
     	String html = httpclient.execute(httpget,responseHandler);
         List<Item> result = ObjUtils.newItemList(html);
         return result;  
