@@ -1,5 +1,7 @@
 package com.didikeke.spunsugar;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -14,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.didikeke.spunsugar.client.SpunSugarClient;
-import com.didikeke.spunsugar.client.domain.User;
+import com.didikeke.spunsugar.client.domain.Item;
 
 public class LoginActivity extends Activity {
 
@@ -33,7 +35,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.login);
         
         mPref = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-        mApp = (ApplicationEx)LoginActivity.this.getApplication();
+        mApp = (ApplicationEx)getApplication();
 
         
         mTextUsername = (EditText)findViewById(R.id.editUsername);
@@ -86,7 +88,7 @@ public class LoginActivity extends Activity {
         
     };
     
-    private class SignInTask extends AsyncTask<String,Void,User>{
+    private class SignInTask extends AsyncTask<String,Void,Void>{
 
         Exception exception = null;
         private ProgressDialog signInDialog;
@@ -106,28 +108,29 @@ public class LoginActivity extends Activity {
         }
         
         @Override
-        protected User doInBackground(String... args) {
+        protected Void doInBackground(String... args) {
             
             String username = args[0];
             String password = args[1];
             
             try{
             	SpunSugarClient client = new SpunSugarClient(username,password);
-            	User user = client.getUser();
+            	List<Item> items = client.getItems();
             	
             	mApp.setClient(client);
+            	mApp.setItems(items);
             	
             	mPref.edit().putString("username", username)
             			  .putString("password", password).commit();
             	
-            	return user;
+            	
             }catch(Exception e){
                 exception = e;                
             }
             return null;
         }
         
-        protected void onPostExecute(User user) {  
+        protected void onPostExecute(Void v) {  
             
             if(null == exception){
                 //SUCCESS
