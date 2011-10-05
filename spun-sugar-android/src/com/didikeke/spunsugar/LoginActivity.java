@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,10 +18,13 @@ import com.didikeke.spunsugar.client.domain.User;
 
 public class LoginActivity extends Activity {
 
+	private SharedPreferences mPref;
+	private ApplicationEx mApp;
     
     private EditText mTextUsername;
     private EditText mTextPassword;    
     private Button mButtonSignIn;
+    
     
     
     @Override
@@ -27,14 +32,38 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         
+        mPref = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+        mApp = (ApplicationEx)LoginActivity.this.getApplication();
+
+        
         mTextUsername = (EditText)findViewById(R.id.editUsername);
         mTextPassword = (EditText)findViewById(R.id.editPassword);
         
         mButtonSignIn = (Button)findViewById(R.id.button_sign_in);
         mButtonSignIn.setOnClickListener(mSignInOnClickListener);
         
+        
     }
     
+    public void onStart(){
+    	super.onStart();
+    	
+    	if(null != mApp.getClient()){
+    		openMainActivity();
+    	}
+    	
+    	String username = mPref.getString("username", "");
+        String password = mPref.getString("password","");
+        mTextUsername.setText(username);
+        mTextPassword.setText(password);
+        
+    }
+    
+    private void openMainActivity(){
+    	Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }    
     
     private View.OnClickListener mSignInOnClickListener = new View.OnClickListener() {
         
@@ -85,8 +114,12 @@ public class LoginActivity extends Activity {
             try{
             	SpunSugarClient client = new SpunSugarClient(username,password);
             	User user = client.getUser();
-            	ApplicationEx app = (ApplicationEx)LoginActivity.this.getApplication();
-            	app.setClient(client);
+            	
+            	mApp.setClient(client);
+            	
+            	mPref.edit().putString("username", username)
+            			  .putString("password", password).commit();
+            	
             	return user;
             }catch(Exception e){
                 exception = e;                
@@ -99,8 +132,7 @@ public class LoginActivity extends Activity {
             if(null == exception){
                 //SUCCESS
                 signInDialog.dismiss();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                openMainActivity();
             }else{
                 signInDialog.dismiss();
                 Toast.makeText(LoginActivity.this, exception.getMessage() ,Toast.LENGTH_LONG).show();

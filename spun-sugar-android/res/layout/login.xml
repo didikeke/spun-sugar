@@ -18,11 +18,11 @@
     		android:background="@drawable/dialogcontext" android:padding="20dip">
     			<LinearLayout android:id="@+id/linearLayout221" android:layout_weight="1" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
     				<TextView android:id="@+id/textView1" android:layout_height="wrap_content" android:text="@string/user_name" android:layout_width="80dip"></TextView>
-    				<EditText android:text="" android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/editUsername"></EditText>
+    				<EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/editUsername"></EditText>
     			</LinearLayout>
     			<LinearLayout android:id="@+id/linearLayout222" android:layout_weight="1" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
     				<TextView android:layout_height="wrap_content" android:text="@string/password" android:layout_width="80dip" android:id="@+id/textView2"></TextView>
-    				<EditText android:text="" android:layout_width="fill_parent" android:layout_height="wrap_content" android:password="false" android:id="@+id/editPassword"></EditText>
+    				<EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:password="false" android:id="@+id/editPassword"></EditText>
     				
     			</LinearLayout>
     			<LinearLayout android:id="@+id/linearLayout223" android:layout_weight="1" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_vertical|bottom|right">
