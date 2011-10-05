@@ -22,6 +22,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.didikeke.spunsugar.client.domain.Item;
 import com.didikeke.spunsugar.client.domain.User;
+import com.didikeke.spunsugar.client.util.ObjUtils;
 
 public class SpunSugarClient {
     

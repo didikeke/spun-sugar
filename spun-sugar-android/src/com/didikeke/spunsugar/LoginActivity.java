@@ -1,7 +1,5 @@
 package com.didikeke.spunsugar;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -16,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.didikeke.spunsugar.client.SpunSugarClient;
-import com.didikeke.spunsugar.client.domain.Item;
 
 public class LoginActivity extends Activity {
 
@@ -115,10 +112,9 @@ public class LoginActivity extends Activity {
             
             try{
             	SpunSugarClient client = new SpunSugarClient(username,password);
-            	List<Item> items = client.getItems();
+            	client.getUser();
             	
             	mApp.setClient(client);
-            	mApp.setItems(items);
             	
             	mPref.edit().putString("username", username)
             			  .putString("password", password).commit();

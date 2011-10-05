@@ -13,14 +13,30 @@
     	android:name="ApplicationEx"
     	android:theme="@android:style/Theme.NoTitleBar">
         <activity android:name=".LoginActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name">    
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>        
         </activity>
 		<activity 
         	android:name=".MainActivity" 
+        	android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity 
+        	android:name=".ItemsActivity" 
+        	android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity 
+        	android:name=".HoldsActivity" 
+        	android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity 
+        	android:name=".ReadingHistoryActivity" 
+        	android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity 
+        	android:name=".SearchActivity" 
         	android:theme="@android:style/Theme.NoTitleBar">
         </activity>
     </application>

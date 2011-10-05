@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.didikeke.spunsugar.client.domain.Item;
 import com.didikeke.spunsugar.client.domain.User;
+import com.didikeke.spunsugar.client.util.ObjUtils;
 
 
 public class ObjUtilsTest {
@@ -63,7 +64,7 @@ public class ObjUtilsTest {
         Assert.assertEquals("2008-06-17", item.getDate());
         Assert.assertEquals("复本 1", item.getDetails());
 
-        Assert.assertEquals(128,list.size());
+        Assert.assertEquals(131,list.size());
     }
     
     
