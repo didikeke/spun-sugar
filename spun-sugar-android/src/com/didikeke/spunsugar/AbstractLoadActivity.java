@@ -10,7 +10,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.didikeke.spunsugar.client.SpunSugarClient;
@@ -21,7 +23,18 @@ public abstract class AbstractLoadActivity extends ListActivity {
     protected ApplicationEx mApp;
     protected SpunSugarClient mClient;
     
-    private List<Item> cachedData;
+    protected Button mRefreshButton;
+    
+    private List<Item> mCachedItems;
+    
+    private View.OnClickListener mRefreshButtonListener = new View.OnClickListener(){
+
+        @Override
+        public void onClick(View v) {
+            refreshItems();
+        }
+        
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,14 +43,19 @@ public abstract class AbstractLoadActivity extends ListActivity {
 
         mApp = (ApplicationEx) getApplication();
         mClient = mApp.getClient();
+        mRefreshButton = (Button)findViewById(R.id.refresh_button);
+        mRefreshButton.setOnClickListener(mRefreshButtonListener);
         
-        if(null != cachedData){
-            displayItems(cachedData);
+        if(null != mCachedItems){
+            displayItems(mCachedItems);
         }else{
-            LoadTask holdsTask = new LoadTask();
-            holdsTask.execute();
-        }    
+            refreshItems();
+        }
+    }
 
+    private void refreshItems() {
+        LoadTask holdsTask = new LoadTask();
+        holdsTask.execute();
     }
     
     public abstract List<Item> getRemoteData() throws IOException;
@@ -73,7 +91,7 @@ public abstract class AbstractLoadActivity extends ListActivity {
             
             try{
                 List<Item> items = getRemoteData();
-                cachedData = items;
+                mCachedItems = items;
                 return items;
                 
                 

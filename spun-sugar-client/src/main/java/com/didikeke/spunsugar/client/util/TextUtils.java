@@ -26,4 +26,12 @@ public class TextUtils {
         return realTitle;
     }
     
+    public static String trimDate(String date){
+        if(null == date){
+            return date;
+        }
+        String realDate = pickText(date,".*(\\d{2}-\\d{2}-\\d{2}).*",1);
+        return realDate;
+    }
+    
 }
