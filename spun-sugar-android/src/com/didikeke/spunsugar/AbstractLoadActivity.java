@@ -13,11 +13,15 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.didikeke.spunsugar.client.SpunSugarClient;
 import com.didikeke.spunsugar.client.domain.Item;
 
 public abstract class AbstractLoadActivity extends ListActivity {
 
     protected ApplicationEx mApp;
+    protected SpunSugarClient mClient;
+    
+    private List<Item> cachedData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,10 +29,10 @@ public abstract class AbstractLoadActivity extends ListActivity {
         setContentView(R.layout.items);
 
         mApp = (ApplicationEx) getApplication();
+        mClient = mApp.getClient();
         
-        List<Item> holds = getCachedData();
-        if(null != holds){
-            displayItems(holds);
+        if(null != cachedData){
+            displayItems(cachedData);
         }else{
             LoadTask holdsTask = new LoadTask();
             holdsTask.execute();
@@ -36,7 +40,6 @@ public abstract class AbstractLoadActivity extends ListActivity {
 
     }
     
-    public abstract List<Item> getCachedData();
     public abstract List<Item> getRemoteData() throws IOException;
     
     
@@ -69,9 +72,9 @@ public abstract class AbstractLoadActivity extends ListActivity {
         protected List<Item> doInBackground(String... args) {
             
             try{
-                List<Item> holds = getRemoteData();
-                  
-                return holds;
+                List<Item> items = getRemoteData();
+                cachedData = items;
+                return items;
                 
                 
             }catch(Exception e){
