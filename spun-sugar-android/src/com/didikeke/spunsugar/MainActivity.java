@@ -3,6 +3,9 @@ package com.didikeke.spunsugar;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabWidget;
@@ -11,6 +14,7 @@ import android.widget.TabHost.TabSpec;
 
 public class MainActivity extends TabActivity {
 
+    protected ApplicationEx mApp;
 	private TabHost mTabHost;
 	private TabWidget mTabWidget;
 
@@ -19,6 +23,7 @@ public class MainActivity extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        mApp = (ApplicationEx) getApplication();
 		mTabHost = (TabHost)findViewById(android.R.id.tabhost);
 		mTabWidget = (TabWidget)findViewById(android.R.id.tabs);
 		
@@ -72,4 +77,30 @@ public class MainActivity extends TabActivity {
 			}
 		}
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	 MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.layout.main_menus, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.about:
+	        //newGame();
+	        return true;
+	    case R.id.logout:
+	        mApp.setClient(null);
+	        Intent intent = new Intent(this, LoginActivity.class);
+	        startActivity(intent);
+	        finish();	        
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
+	}
+	    
 }
