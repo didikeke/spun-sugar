@@ -110,23 +110,33 @@ public class SpunSugarClient {
     }
     
     public List<Item> getItems() throws IOException{
-    	 return getPathItems("/items");          
+    	 return getPathItems("/items",1);          
     }
     
     public List<Item> getHolds() throws IOException {
-        return getPathItems("/holds");
+        return getPathItems("/holds",1);
     }
     
     public List<Item> getReadingHistory() throws IOException {
-    	return getPathItems("/readinghistory"); 
+    	return getPathItems("/readinghistory",1); 
     }
     
-    protected List<Item> getPathItems(String path) throws IOException{    	
+    protected List<Item> getPathItems(String path,int retry) throws IOException{    	
     	String id = getUser().getId();    	    	
     	HttpGet httpget = new HttpGet("http://ztiii.zjlib.cn/patroninfo~S0*chx/" 
                 + id + path);
     	String html = httpclient.execute(httpget,responseHandler);
+    	if(retry > 0 && isSessionTimeOut(html)){
+    	    retry--;
+    	    //re-login
+    	    user = login();
+    	    return getPathItems(path,retry);
+    	}
         List<Item> result = ObjUtils.newItemList(html);
         return result;  
+    }
+    
+    private boolean isSessionTimeOut(String html){
+        return null == html || !html.contains(username);
     }
 }

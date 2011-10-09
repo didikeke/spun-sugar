@@ -12,7 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.didikeke.spunsugar.client.SpunSugarClient;
@@ -23,7 +23,7 @@ public abstract class AbstractLoadActivity extends ListActivity {
     protected ApplicationEx mApp;
     protected SpunSugarClient mClient;
     
-    protected Button mRefreshButton;
+    protected TextView mRefreshButton;
     
     private List<Item> mCachedItems;
     
@@ -43,7 +43,7 @@ public abstract class AbstractLoadActivity extends ListActivity {
 
         mApp = (ApplicationEx) getApplication();
         mClient = mApp.getClient();
-        mRefreshButton = (Button)findViewById(R.id.refresh_button);
+        mRefreshButton = (TextView)findViewById(R.id.refresh_button);
         mRefreshButton.setOnClickListener(mRefreshButtonListener);
         
         if(null != mCachedItems){
