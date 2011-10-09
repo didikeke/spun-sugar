@@ -8,8 +8,10 @@ import java.util.List;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -42,7 +44,18 @@ public abstract class AbstractLoadActivity extends ListActivity {
         setContentView(R.layout.items);
 
         mApp = (ApplicationEx) getApplication();
+        
         mClient = mApp.getClient();
+        
+        if(null == mClient){
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            String username = pref.getString("username", "");
+            String password = pref.getString("password","");
+            mClient = new SpunSugarClient(username,password);
+            mApp.setClient(mClient);
+        }
+        
+        
         mRefreshButton = (TextView)findViewById(R.id.refresh_button);
         mRefreshButton.setOnClickListener(mRefreshButtonListener);
         

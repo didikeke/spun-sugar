@@ -31,7 +31,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         
-        mPref = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+        mPref = PreferenceManager.getDefaultSharedPreferences(this);
         mApp = (ApplicationEx)getApplication();
 
         
