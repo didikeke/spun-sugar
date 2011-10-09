@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:orientation="horizontal" android:background="@drawable/default_bg">
+    <LinearLayout android:layout_height="fill_parent" android:layout_width="wrap_content" android:id="@+id/linearLayout1" android:layout_weight="1"/>
+    <LinearLayout 
+    	android:layout_height="fill_parent" 
+    	android:orientation="vertical"
+    	android:id="@+id/linearLayout2" 
+    	android:layout_weight="3" android:layout_width="wrap_content">
+    	<LinearLayout android:id="@+id/linearLayout21" android:layout_weight="2" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+    	<LinearLayout 
+    		android:id="@+id/linearLayout22" 
+    		android:layout_weight="2" 
+    		android:layout_width="fill_parent" 
+    		android:layout_height="wrap_content" 
+    		android:orientation="vertical"
+    		android:background="@drawable/dialogcontext" android:padding="20dip">
+    			<LinearLayout android:id="@+id/linearLayout221" android:layout_weight="1" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+    				<TextView android:id="@+id/textView1" android:layout_height="wrap_content" android:text="@string/user_name" android:layout_width="80dip"></TextView>
+    				<EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/editUsername"></EditText>
+    			</LinearLayout>
+    			<LinearLayout android:id="@+id/linearLayout222" android:layout_weight="1" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+    				<TextView android:layout_height="wrap_content" android:text="@string/password" android:layout_width="80dip" android:id="@+id/textView2"></TextView>
+    				<EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:password="false" android:id="@+id/editPassword"></EditText>
+    				
+    			</LinearLayout>
+    			<LinearLayout android:id="@+id/linearLayout223" android:layout_weight="1" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_vertical|bottom|right">
+    				<Button android:text="@string/sign_in" android:layout_width="100dip" android:layout_height="wrap_content" android:id="@+id/button_sign_in"></Button>
+    			</LinearLayout>
+    		</LinearLayout>
+    	<LinearLayout android:id="@+id/linearLayout23" android:layout_weight="2" android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout android:layout_height="fill_parent" android:layout_width="wrap_content" android:id="@+id/linearLayout3" android:layout_weight="1"/>
+
+</LinearLayout>

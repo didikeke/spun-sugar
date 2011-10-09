@@ -1,6 +1,8 @@
 package com.didikeke.spunsugar.client;
 
-public class SpunSugarLoginException extends Exception {
+import java.io.IOException;
+
+public class SpunSugarLoginException extends IOException {
 
     private static final long serialVersionUID = -8854864746053536634L;
 

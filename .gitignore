@@ -8,3 +8,5 @@
 /spun-sugar-client/target
 /spun-sugar-client/.settings
 /spun-sugar-client/.settings/org.eclipse.jdt.core.prefs
+/spun-sugar-android/gen
+/spun-sugar-android/bin

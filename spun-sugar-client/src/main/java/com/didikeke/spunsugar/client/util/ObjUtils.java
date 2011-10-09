@@ -1,23 +1,15 @@
-package com.didikeke.spunsugar.client;
+package com.didikeke.spunsugar.client.util;
+
+import static com.didikeke.spunsugar.client.util.TextUtils.pickText;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.didikeke.spunsugar.client.domain.Item;
 import com.didikeke.spunsugar.client.domain.User;
 
 public class ObjUtils {
-
-	private static String pickText(String input,String reg,int pos){
-		Pattern pattern = Pattern.compile(reg,Pattern.DOTALL);
-    	Matcher matcher = pattern.matcher(input);    
-    	if(matcher.find()){
-    		return matcher.group(pos).trim();
-    	}
-    	return null;
-	}
+	
     public static User newUser(String html){  
     	String name = pickText(html,"<div class=\"patNameAddress\">.*?<strong>(.+?)</strong>",1);
     	String id = pickText(html,"/patroninfo~S0\\*chx/(.+?)/top/",1);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+	<TextView  
+	    android:layout_width="fill_parent" 
+    	android:layout_height="50dip" 
+    	android:text="@string/app_name"
+    	android:gravity="center"
+    	android:background="@drawable/tab_bg_selected"/>
+    
+   <TextView  
+	    android:layout_width="fill_parent" 
+    	android:layout_height="fill_parent" 
+    	android:text="还某有实现"
+    	android:gravity="center"
+		android:background="#FFF7F7F7"
+     	/>
+
+              
+</LinearLayout>
