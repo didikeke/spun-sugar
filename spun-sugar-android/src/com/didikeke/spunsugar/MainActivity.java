@@ -1,5 +1,8 @@
 package com.didikeke.spunsugar;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -53,7 +56,7 @@ public class MainActivity extends TabActivity {
 		mTabHost.addTab(tab_2);
 		mTabHost.addTab(tab_3);
 		mTabHost.addTab(tab_4);
-        
+		hideStrip(mTabWidget);
 		changeTabsBackground();
 		
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener(){
@@ -64,6 +67,41 @@ public class MainActivity extends TabActivity {
 			}
 			
 		});
+	}
+	
+	private void hideStrip(TabWidget tw){
+	    Field mBottomLeftStrip;
+	    Field mBottomRightStrip;
+
+	    try {
+	        mBottomLeftStrip = tw.getClass().getDeclaredField("mBottomLeftStrip");
+	        mBottomRightStrip = tw.getClass().getDeclaredField("mBottomRightStrip");
+
+	        if (!mBottomLeftStrip.isAccessible()) {
+	            mBottomLeftStrip.setAccessible(true);
+	        }
+
+	        if (!mBottomRightStrip.isAccessible()) {
+	            mBottomRightStrip.setAccessible(true);
+	        }
+
+	        mBottomLeftStrip.set(tw, getResources().getDrawable(R.drawable.blank));
+	        mBottomRightStrip.set(tw, getResources().getDrawable(R.drawable.blank));
+
+	    } 
+	    catch (java.lang.NoSuchFieldException e) {
+	        // possibly 2.2
+	        try {
+	            Method stripEnabled = tw.getClass().getDeclaredMethod("setStripEnabled", boolean.class);
+	            stripEnabled.invoke(tw, false);
+
+	        } 
+	        catch (Exception e1) {
+	            e1.printStackTrace();
+	        }
+	    } 
+	    catch (Exception e) {}
+	
 	}
     
 	private void changeTabsBackground() {
